@@ -3,14 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>포켓몬 도감</title>
+  <title>포켓몬 도감 Pro</title>
   <style>
-    @font-face {
+       @font-face {
       font-family: "CAFE24-PRO-UP";
       src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2507-1@1.0/Cafe24PROUP.woff2")
         format("woff2");
       font-weight: normal;
       font-display: swap;
+    }
+    :root {
+      --main-color: #5E739F;
+      --sub-color: #C5D0E9;
+      --text-color: #333;
+      --card-bg-color: #fff;
+      --font-family: "NeoDunggeunmoCode", sans-serif;
     }
 
     body {
@@ -22,170 +29,93 @@
       padding: 2rem;
     }
 
+
+
+
     /* 검색창 */
     #search-form {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
+      display: flex; gap: 0.5rem; margin-bottom: 2rem;
     }
     #search-form input {
-      padding: 0.5rem 1rem;
-      border: 2px solid #5E739F;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      width: 200px;
+      padding: 0.5rem 1rem; border: 2px solid var(--main-color); border-radius: 0.5rem; font-size: 1rem; width: 200px;
     }
     #search-form button {
-      padding: 0.5rem 1.2rem;
-      background-color: #5E739F;
-      color: white;
-      border: none;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      cursor: pointer;
-      font-family: "NeoDunggeunmoCode", sans-serif;
+      padding: 0.5rem 1.2rem; background-color: var(--main-color); color: white; border: none; border-radius: 0.5rem; font-size: 1rem; cursor: pointer; font-family: var(--font-family);
     }
-    #search-form button:hover {
-      background-color: #4A5B7F;
-    }
+    #search-form button:hover { background-color: #4A5B7F; }
 
     /* 도감 카드 */
+    .pokedex-card-container {
+        position: relative;
+    }
     .pokedex-card {
-      width: 320px;
-      border: 5px solid #5E739F;
-      background-color: #5E739F;
-      border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      display: none;
-      flex-direction: column;
-      text-align: center;
-      /* position: relative; <- 이제 필요 없습니다 */
+      width: 340px; border: 5px solid var(--main-color); background-color: var(--main-color); border-radius: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; flex-direction: column; text-align: center;
     }
 
-    /* --- ▼ 여기가 핵심 수정 부분입니다 ▼ --- */
+    /* 로딩 스피너 */
+    .loader {
+        border: 5px solid #f3f3f3; border-top: 5px solid var(--main-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 4rem auto;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 
-    /* 카드 헤더 (이름 부분) */
+    /* 헤더 */
     .poke-header {
-      background-color: #5E739F;
-      color: white;
-      padding: 1rem 1rem; /* 패딩 값 미세 조정 */
-      border-top-left-radius: 0.7rem;
-      border-top-right-radius: 0.7rem;
-      /* Flexbox로 이름과 번호를 양쪽으로 배치 */
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start; /* 상단 정렬 */
+      background-color: var(--main-color); color: white; padding: 1rem; border-top-left-radius: 0.7rem; border-top-right-radius: 0.7rem; display: flex; justify-content: space-between; align-items: flex-start;
     }
-
-    .poke-name-group {
-        text-align: left; /* 이름 그룹은 왼쪽 정렬 */
-    }
-
-    /* 포켓몬 번호 */
-    .poke-number {
-      /* position: absolute; <- 제거 */
-      /* top: 10px; <- 제거 */
-      /* right: 10px; <- 제거 */
-      background-color: white;
-      border: 2px solid #5E739F;
-      border-radius: 0.5rem;
-      padding: 0.3rem 0.8rem;
-      font-weight: normal;
-      color: #333;
-      font-size: 1.1rem;
-      /* flex 아이템이 줄어들지 않도록 설정 */
-      flex-shrink: 0;
-      margin-top: 5px; /* 위치 미세 조정 */
-    }
+    .poke-name-group { text-align: left; }
+    .poke-koname { font-size: 2.2rem; margin-bottom: 0.3rem; color: white; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); }
+    .poke-jpname, .poke-enname { font-size: 1.1rem; color: var(--sub-color); letter-spacing: 1px; }
+    .poke-number { background-color: var(--card-bg-color); border: 2px solid var(--main-color); border-radius: 0.5rem; padding: 0.3rem 0.8rem; color: var(--text-color); font-size: 1.1rem; flex-shrink: 0; margin-top: 5px; }
     
-    /* --- ▲ 여기가 핵심 수정 부분입니다 ▲ --- */
+    /* 바디 */
+    .poke-body { background-color: var(--card-bg-color); padding: 0.5rem 1rem; }
+    .poke-image-container { position: relative; width: 200px; height: 200px; margin: 0 auto; }
+    .poke-img { width: 100%; height: 100%; object-fit: contain; }
+    .interactive-buttons { position: absolute; top: 5px; right: 5px; display: flex; flex-direction: column; gap: 5px; }
+    .interactive-buttons button { background: rgba(255, 255, 255, 0.7); border: 1px solid #ccc; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1rem; display: grid; place-items: center; backdrop-filter: blur(2px); }
+    .interactive-buttons button:hover { background: rgba(255, 255, 255, 1); }
+    
+    .poke-flavor-text { font-size: 0.9rem; padding: 1rem; margin: 0.5rem 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; color: #555; }
+    
+    .poke-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+    .detail-box { display: flex; flex-direction: column; gap: 0.3rem; }
+    .detail-box h4 { margin: 0; font-size: 1rem; color: var(--main-color); }
+    .detail-box p { margin: 0; font-size: 1.1rem; }
+    
+    .poke-stats-container h4 { margin: 1rem 0 0.5rem; text-align: left; }
+    .stat-row { display: flex; align-items: center; margin-bottom: 0.3rem; font-size: 0.9rem; }
+    .stat-name { width: 80px; text-align: right; padding-right: 10px; }
+    .stat-bar-container { flex: 1; background: #eee; border-radius: 5px; height: 15px; }
+    .stat-bar { height: 100%; border-radius: 5px; transition: width 0.5s ease-in-out; }
+    
+    /* 푸터 */
+    .poke-footer { display: flex; background-color: var(--main-color); padding: 0.7rem; }
+    .info-box { flex: 1; display: flex; flex-direction: column; align-items: center; color: white; }
+    .info-label { font-size: 1rem; margin-bottom: 0.3rem; }
+    .info-content { background: var(--card-bg-color); width: 90%; padding: 0.5rem; border-radius: 0.8rem; color: var(--text-color); font-size: 1.2rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+    .type-badge { padding: 0.3rem 0.6rem; border-radius: 0.5rem; font-size: 0.9rem; color: white; text-transform: uppercase; }
 
-    .poke-koname {
-      font-size: 2.2rem;
-      font-weight: normal;
-      margin-bottom: 0.3rem;
-      color: white;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
+    /* 진화 과정 */
+    .poke-evolution-container { background-color: #e9eef5; padding: 1rem; border-bottom-left-radius: 0.7rem; border-bottom-right-radius: 0.7rem; }
+    .poke-evolution-container h3 { margin: 0 0 0.5rem 0; color: var(--main-color); font-size: 1.2rem; }
+    .evolution-chain { display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
+    .evolution-stage { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+    .evolution-stage img { width: 70px; height: 70px; }
+    .evolution-stage p { margin: 0; font-size: 0.9rem; }
+    .evolution-arrow { font-size: 1.5rem; color: var(--main-color); }
+    
+    /* 네비게이션 버튼 */
+    .nav-button { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0,0,0,0.3); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.5rem; cursor: pointer; transition: background-color 0.2s; }
+    .nav-button:hover { background-color: rgba(0,0,0,0.6); }
+    .nav-button:disabled { background-color: rgba(0,0,0,0.1); cursor: not-allowed; }
+    .prev { left: -50px; }
+    .next { right: -50px; }
 
-    .poke-jpname, .poke-enname {
-      font-size: 1.1rem;
-      color: #C5D0E9;
-      letter-spacing: 1px;
-    }
-
-    /* 카드 본문 (이미지 부분) */
-    .poke-body {
-        background-color: #ffffff;
-        padding: 1rem;
-    }
-
-    .poke-img {
-      width: 180px;
-      height: 180px;
-      object-fit: contain;
-    }
-
-    /* 카드 푸터 (정보 부분) */
-    .poke-footer {
-        display: flex;
-        background-color: #5E739F;
-        padding: 0.7rem;
-        border-bottom-left-radius: 0.7rem;
-        border-bottom-right-radius: 0.7rem;
-    }
-    .info-box {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: white;
-    }
-    .info-label {
-        font-size: 1rem;
-        margin-bottom: 0.3rem;
-    }
-    .info-content {
-        background: white;
-        width: 90%;
-        padding: 0.5rem;
-        border-radius: 0.8rem;
-        color: #333;
-        font-size: 1.2rem;
-        font-weight: normal;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 0.5rem;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .type-badge {
-      padding: 0.3rem 0.6rem;
-      border-radius: 0.5rem;
-      font-size: 0.9rem;
-      color: white;
-    }
-
-    /* 타입별 색상 (채도 재조정) */
-    .type-fire { background: #F4823A; }
-    .type-water { background: #6890F0; }
-    .type-grass { background: #78C850; }
-    .type-electric { background: #F8D030; }
-    .type-ice { background: #98D8D8; }
-    .type-fighting { background: #C55A54; }
-    .type-poison { background: #A040A0; }
-    .type-ground { background: #E0C068; }
-    .type-flying { background: #A890F0; }
-    .type-psychic { background: #F85888; }
-    .type-bug { background: #A8B820; }
-    .type-rock { background: #B8A038; }
-    .type-ghost { background: #705898; }
-    .type-dragon { background: #7038F8; }
-    .type-dark { background: #705848; }
-    .type-steel { background: #B8B8D0; }
-    .type-fairy { background: #EE99AC; }
-    .type-normal { background: #A8A878; }
+    /* 타입별 색상 */
+    .type-fire { background: #F4823A; } .type-water { background: #6890F0; } .type-grass { background: #78C850; } .type-electric { background: #F8D030; } .type-ice { background: #98D8D8; } .type-fighting { background: #C55A54; } .type-poison { background: #A040A0; } .type-ground { background: #E0C068; } .type-flying { background: #A890F0; } .type-psychic { background: #F85888; } .type-bug { background: #A8B820; } .type-rock { background: #B8A038; } .type-ghost { background: #705898; } .type-dragon { background: #7038F8; } .type-dark { background: #705848; } .type-steel { background: #B8B8D0; } .type-fairy { background: #EE99AC; } .type-normal { background: #A8A878; }
   </style>
 </head>
 <body>
@@ -194,109 +124,266 @@
     <button>검색</button>
   </form>
 
-  <div id="pokedex" class="pokedex-card">
-    <div class="poke-header">
-      <div class="poke-name-group">
-        <div id="poke-koname" class="poke-koname">포켓몬</div>
-        <div id="poke-jpname" class="poke-jpname">ポケモン</div>
-        <div id="poke-enname" class="poke-enname">Pokemon</div>
+  <div class="pokedex-card-container">
+    <div id="pokedex" class="pokedex-card">
       </div>
-      <div id="poke-number" class="poke-number">No.000</div>
-    </div>
-    <div class="poke-body">
-      <img id="poke-img" class="poke-img" src="" alt="포켓몬"/>
-    </div>
 
-    <div class="poke-footer">
-        <div class="info-box">
-            <span class="info-label">타입</span>
-            <div class="info-content" id="poke-types"></div>
-        </div>
-        <div class="info-box">
-            <span class="info-label">분류</span>
-            <div class="info-content" id="poke-classname"></div>
-        </div>
-    </div>
+    <button id="prev-pokemon" class="nav-button prev" disabled>◀</button>
+    <button id="next-pokemon" class="nav-button next" disabled>▶</button>
   </div>
 
   <script>
-    const typeTranslations = {
-        normal: "노말", fire: "불", water: "물", grass: "풀", electric: "전기",
-        ice: "얼음", fighting: "격투", poison: "독", ground: "땅", flying: "비행",
-        psychic: "에스퍼", bug: "벌레", rock: "바위", ghost: "고스트", dragon: "드래곤",
-        dark: "악", steel: "강철", fairy: "페어리",
-    };
+    const POKE_API_BASE = "https://pokeapi.co/api/v2";
+    const MAX_POKEMON_ID = 1025; // 현재 API가 지원하는 최대 포켓몬 ID
 
-    async function resolveInputToId(input) {
-      if (!isNaN(input)) {
-        return parseInt(input, 10);
-      }
-      try {
-        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${input.toLowerCase()}`);
-        if (res.ok) {
-          const data = await res.json();
-          return data.id;
-        }
-      } catch (e) {}
-      for (let i = 1; i <= 1025; i++) {
+    // DOM 요소
+    const searchForm = document.getElementById("search-form");
+    const pokeInput = document.getElementById("poke-input");
+    const pokedexCard = document.getElementById("pokedex");
+    const prevButton = document.getElementById("prev-pokemon");
+    const nextButton = document.getElementById("next-pokemon");
+
+    // 포켓몬 데이터 상태 저장
+    let currentPokemon = {};
+
+    const typeTranslations = { normal: "노말", fire: "불", water: "물", grass: "풀", electric: "전기", ice: "얼음", fighting: "격투", poison: "독", ground: "땅", flying: "비행", psychic: "에스퍼", bug: "벌레", rock: "바위", ghost: "고스트", dragon: "드래곤", dark: "악", steel: "강철", fairy: "페어리" };
+
+    // --- 데이터 가져오기 ---
+    async function fetchApi(url) {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`API Error: ${response.status}`);
+        return response.json();
+    }
+
+    // --- 주요 검색 함수 ---
+    async function searchForPokemon(identifier) {
+        pokedexCard.style.display = "flex";
+        pokedexCard.innerHTML = `<div class="loader"></div>`;
+        prevButton.disabled = true;
+        nextButton.disabled = true;
+
         try {
-            const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${i}`);
-            if (!speciesRes.ok) continue;
-            const speciesData = await speciesRes.json();
-            const koName = speciesData.names.find(n => n.language.name === "ko");
-            if (koName && koName.name === input) {
-              return i;
-            }
-        } catch(e) { continue; }
-      }
-      return null;
+            const pokemonData = await fetchApi(`${POKE_API_BASE}/pokemon/${identifier.toString().toLowerCase()}`);
+            const speciesData = await fetchApi(pokemonData.species.url);
+
+            currentPokemon = {
+                id: pokemonData.id,
+                name: pokemonData.name,
+                sprites: {
+                    default: pokemonData.sprites.other['official-artwork'].front_default,
+                    shiny: pokemonData.sprites.other['official-artwork'].front_shiny
+                },
+                cries: pokemonData.cries.latest
+            };
+
+            renderPokemonCard(pokemonData, speciesData);
+            updateNavButtons();
+        } catch (error) {
+            console.error("Error fetching Pokémon data:", error);
+            pokedexCard.innerHTML = `<p style="padding: 2rem;">포켓몬을 찾을 수 없습니다!</p>`;
+        }
     }
 
-    async function searchPoke(event) {
-      event.preventDefault();
-      const name = document.querySelector("#poke-input").value.trim();
-      if (!name) return;
+    // --- 렌더링 함수들 ---
+    async function renderPokemonCard(data, speciesData) {
+        pokedexCard.innerHTML = `
+            ${createHeaderHTML(data, speciesData)}
+            ${createBodyHTML(data, speciesData)}
+            ${createFooterHTML(data, speciesData)}
+            ${await createEvolutionHTML(speciesData)}
+        `;
+        setupInteractiveButtons();
+        renderStatBars(data.stats);
+    }
+    
+    function createHeaderHTML(data, speciesData) {
+        const koName = speciesData.names.find(n => n.language.name === 'ko')?.name || data.name;
+        const jpName = speciesData.names.find(n => n.language.name === 'ja-Hrkt')?.name || '';
+        const enName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
 
-      const pokeNo = await resolveInputToId(name);
-      if (!pokeNo) {
-        alert("존재하지 않는 포켓몬입니다!");
-        return;
-      }
+        return `
+            <div class="poke-header">
+              <div class="poke-name-group">
+                <div class="poke-koname">${koName}</div>
+                <div class="poke-jpname">${jpName}</div>
+                <div class="poke-enname">${enName}</div>
+              </div>
+              <div class="poke-number">No.${String(data.id).padStart(3, '0')}</div>
+            </div>
+        `;
+    }
 
-      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeNo}`);
-      const data = await res.json();
+function createBodyHTML(data, speciesData) {
+    const flavorText = speciesData.flavor_text_entries.find(entry => entry.language.name === 'ko')?.flavor_text || "이 포켓몬에 대한 설명이 아직 없습니다.";
+    const height = data.height / 10; // m
+    const weight = data.weight / 10; // kg
 
-      const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokeNo}`);
-      const speciesData = await speciesRes.json();
-      
-      const koNameObj = speciesData.names.find(n => n.language.name === "ko");
-      const enName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
-      const jpNameObj = speciesData.names.find(n => n.language.name === 'ja-Hrkt' || n.language.name === 'ja');
-      const koGenusObj = speciesData.genera.find(g => g.language.name === "ko");
+    // 능력은 speciesData가 아니라 data에서만 가져오기
+    const abilities = data.abilities.map(a => a.ability.name).join(', ');
 
-      document.querySelector("#poke-number").textContent = `No.${String(pokeNo).padStart(3, '0')}`;
-      document.querySelector("#poke-img").src = data.sprites.other['official-artwork'].front_default || data.sprites.front_default;
-      document.querySelector("#poke-koname").textContent = koNameObj ? koNameObj.name : "이름 없음";
-      document.querySelector("#poke-jpname").textContent = jpNameObj ? jpNameObj.name : "";
-      document.querySelector("#poke-enname").textContent = enName;
-      document.querySelector("#poke-classname").textContent = koGenusObj ? koGenusObj.genus : "알 수 없음";
+    return `
+        <div class="poke-body">
+            <div class="poke-image-container">
+                <img id="poke-img" class="poke-img" src="${currentPokemon.sprites.default}" alt="${data.name}">
+                <div class="interactive-buttons">
+                    <button id="shiny-toggle" title="반짝이 모습 보기" style="display: ${currentPokemon.sprites.shiny ? 'grid' : 'none'};">✨</button>
+                    <button id="play-cry" title="울음소리 듣기">🔊</button>
+                </div>
+            </div>
+            <p class="poke-flavor-text">${flavorText.replace(/\n/g, ' ')}</p>
+            <div class="poke-details-grid">
+                <div class="detail-box">
+                    <h4>키</h4><p>${height} m</p>
+                </div>
+                <div class="detail-box">
+                    <h4>몸무게</h4><p>${weight} kg</p>
+                </div>
+                <div class="detail-box">
+                    <h4>특성</h4><p>${abilities}</p>
+                </div>
+            </div>
+            <div class="poke-stats-container">
+                <h4>능력치</h4>
+                ${data.stats.map(stat => `
+                    <div class="stat-row">
+                        <span class="stat-name">${stat.stat.name}</span>
+                        <div class="stat-bar-container"><div class="stat-bar" data-stat-value="${stat.base_stat}"></div></div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
 
-      const typeContainer = document.querySelector("#poke-types");
-      typeContainer.innerHTML = "";
-      data.types.forEach(t => {
-        const typeNameEn = t.type.name;
-        const typeNameKo = typeTranslations[typeNameEn] || typeNameEn.toUpperCase();
+
+function createFooterHTML(data, speciesData) {
+    const types = data.types.map(t =>
+        `<span class="type-badge type-${t.type.name}">${typeTranslations[t.type.name] || t.type.name}</span>`
+    ).join('');
+    const genus = speciesData.genera.find(g => g.language.name === 'ko')?.genus || "알 수 없음";
+
+    return `
+        <div class="poke-footer">
+            <div class="info-box"><span class="info-label">타입</span><div class="info-content">${types}</div></div>
+            <div class="info-box"><span class="info-label">분류</span><div class="info-content">${genus}</div></div>
+        </div>
+    `;
+}
+
+    
+    async function createEvolutionHTML(speciesData) {
+        if (!speciesData.evolution_chain?.url) return '<div class="poke-evolution-container"><h3>진화 정보 없음</h3></div>';
         
-        const span = document.createElement("span");
-        span.className = `type-badge type-${typeNameEn}`;
-        span.textContent = typeNameKo;
-        typeContainer.appendChild(span);
-      });
-      
-      document.querySelector("#pokedex").style.display = "flex";
+        const evolutionData = await fetchApi(speciesData.evolution_chain.url);
+        const chain = await parseEvolutionChain(evolutionData.chain);
+        const evolutionStages = chain.map(pokemon => `
+            <div class="evolution-stage" data-name="${pokemon.name}" title="${pokemon.name} 정보 보기">
+                <img src="${pokemon.sprite || ''}" alt="${pokemon.name}">
+                <p>${pokemon.koName}</p>
+            </div>
+        `).join('<div class="evolution-arrow">→</div>');
+
+        return `
+            <div class="poke-evolution-container">
+                <h3>진화 과정</h3>
+                <div class="evolution-chain">${chain.length > 1 ? evolutionStages : '<p>이 포켓몬은 진화하지 않습니다.</p>'}</div>
+            </div>
+        `;
+    }
+    
+    async function parseEvolutionChain(chain) {
+        const evolutionLine = [];
+        let currentStage = chain;
+        
+        while (currentStage) {
+            const speciesName = currentStage.species.name;
+            evolutionLine.push({ name: speciesName });
+            currentStage = currentStage.evolves_to[0];
+        }
+
+        // 각 진화 단계의 포켓몬 정보 (이미지, 한글 이름)를 병렬로 가져오기
+        const promises = evolutionLine.map(async (pokemon) => {
+            const pData = await fetchApi(`${POKE_API_BASE}/pokemon/${pokemon.name}`);
+            const sData = await fetchApi(pData.species.url);
+            pokemon.sprite = pData.sprites.front_default;
+            pokemon.koName = sData.names.find(n => n.language.name === 'ko')?.name || pokemon.name;
+        });
+
+        await Promise.all(promises);
+        return evolutionLine;
+    }
+    
+    function renderStatBars(stats) {
+        const statBars = document.querySelectorAll('.stat-bar');
+        statBars.forEach(bar => {
+            const value = parseInt(bar.dataset.statValue, 10);
+            const percentage = (value / 255) * 100;
+            bar.style.width = `${percentage}%`;
+            
+            if (percentage < 33) bar.style.backgroundColor = '#f37272';
+            else if (percentage < 66) bar.style.backgroundColor = '#f3d372';
+            else bar.style.backgroundColor = '#72f372';
+        });
     }
 
-    document.querySelector("#search-form").addEventListener("submit", searchPoke);
+    // --- 인터랙티브 기능 설정 ---
+    function setupInteractiveButtons() {
+        // 반짝이 토글
+        const shinyToggle = document.getElementById('shiny-toggle');
+        if (shinyToggle) {
+            let isShiny = false;
+            shinyToggle.addEventListener('click', () => {
+                isShiny = !isShiny;
+                document.getElementById('poke-img').src = isShiny ? currentPokemon.sprites.shiny : currentPokemon.sprites.default;
+            });
+        }
+        
+        // 울음소리 재생
+        const playCry = document.getElementById('play-cry');
+        if (playCry) {
+            playCry.addEventListener('click', () => {
+                const cry = new Audio(currentPokemon.cries);
+                cry.play();
+            });
+        }
+
+        // 진화 트리 클릭
+        document.querySelectorAll('.evolution-stage').forEach(stage => {
+            stage.addEventListener('click', () => {
+                const pokemonName = stage.dataset.name;
+                if(pokemonName !== currentPokemon.name) {
+                    pokeInput.value = pokemonName;
+                    searchForPokemon(pokemonName);
+                }
+            });
+        });
+    }
+    
+    // --- 네비게이션 ---
+    function updateNavButtons() {
+        prevButton.disabled = currentPokemon.id <= 1;
+        nextButton.disabled = currentPokemon.id >= MAX_POKEMON_ID;
+    }
+
+    // --- 이벤트 리스너 ---
+    searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const searchTerm = pokeInput.value.trim();
+        if (searchTerm) searchForPokemon(searchTerm);
+    });
+
+    prevButton.addEventListener('click', () => {
+        if (currentPokemon.id > 1) {
+            searchForPokemon(currentPokemon.id - 1);
+        }
+    });
+
+    nextButton.addEventListener('click', () => {
+        if (currentPokemon.id < MAX_POKEMON_ID) {
+            searchForPokemon(currentPokemon.id + 1);
+        }
+    });
+
   </script>
 </body>
 </html>
